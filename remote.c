@@ -22,7 +22,11 @@
  * THE SOFTWARE.
  */
 
+#include <git2/indexer.h>
+
 #include "php_git2.h"
+
+
 
 PHPAPI zend_class_entry *git2_remote_class_entry;
 
@@ -88,7 +92,7 @@ PHP_METHOD(git2_remote, __construct)
 /* }}} */
 
 
-static int php_git2_rename_packfile(char *packname, git_indexer *idx)
+static int php_git2_rename_packfile(char *packname, git_indexer_stream *idx)
 {
 	char path[GIT_PATH_MAX], oid[GIT_OID_HEXSZ + 1], *slash;
 	int ret;
@@ -124,7 +128,7 @@ static int show_ref__cb(git_remote_head *head, void *payload)
 PHP_METHOD(git2_remote, fetch)
 {
 	php_git2_remote *m_remote;
-	git_indexer *idx = NULL;
+	git_indexer_stream *idx = NULL;
 	git_transfer_progress stats;
 	char *packname = NULL;
 	int error = 0;
@@ -138,7 +142,8 @@ PHP_METHOD(git2_remote, fetch)
 		return;
 	}
 */
-	direction = GIT_DIR_FETCH;
+	direction = 0;
+	//direction = GIT_DIR_FETCH;
 	
 	error = git_remote_connect(m_remote->remote, direction);
 	error = git_remote_ls(m_remote->remote, &show_ref__cb, NULL);

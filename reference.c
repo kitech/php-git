@@ -303,7 +303,8 @@ PHP_METHOD(git2_reference, each)
 	MAKE_STD_ZVAL(opaque.result);
 	array_init(opaque.result);
 	
-	git_reference_foreach(m_repository->repository, list_flags, &php_git2_ref_foreach_cb, (void *)&opaque);
+	git_reference_foreach(m_repository->repository, &php_git2_ref_foreach_cb, (void *)&opaque);
+	// git_reference_foreach(m_repository->repository, list_flags, &php_git2_ref_foreach_cb, (void *)&opaque);
 	
 	RETVAL_ZVAL(opaque.result,0,1);
 }
